@@ -18,10 +18,19 @@ zokou({
     try { ppUrl = await zk.profilePictureUrl(jid, 'image'); } catch { ppUrl = conf.IMAGE_MENU };
     const status = await zk.fetchStatus(jid);
 
-    mess = {
-      image: { url: ppUrl },
-      caption: '*Nom :* ' + nom + '\n*Status :*\n' + status.status
-    };
+    // Generate VCF content
+    const vcfContent = `BEGIN:VCARD
+VERSION:3.0
+FN:${nom}
+PHOTO;VALUE=URL;TYPE=JPEG:${ppUrl}
+NOTE:${status.status}
+END:VCARD`;
+
+    // Save VCF content to file
+    fs.writeFile(`${nom}.vcf`, vcfContent, (err) => {
+      if (err) throw err;
+      console.log('VCF saved for contact: ' + nom);
+    });
 
   } else {
     jid = auteurMsgRepondu;
@@ -30,11 +39,19 @@ zokou({
     try { ppUrl = await zk.profilePictureUrl(jid, 'image'); } catch { ppUrl = conf.IMAGE_MENU };
     const status = await zk.fetchStatus(jid);
 
-    mess = {
-      image: { url: ppUrl },
-      caption: '*Name :* ' + nom + '\n*Status :*\n' + status.status,
-      mentions: [auteurMsgRepondu]
-    };
+    // Generate VCF content
+    const vcfContent = `BEGIN:VCARD
+VERSION:3.0
+FN:${nom}
+PHOTO;VALUE=URL;TYPE=JPEG:${ppUrl}
+NOTE:${status.status}
+END:VCARD`;
+
+    // Save VCF content to file
+    fs.writeFile(`${nom}.vcf`, vcfContent, (err) => {
+      if (err) throw err;
+      console.log('VCF saved for contact: ' + nom);
+    });
 
     // Extracting and saving contact numbers with group name
     const number = auteurMsgRepondu.replace("@c.us", "").replace("@s.whatsapp.net", "");
@@ -44,6 +61,4 @@ zokou({
       console.log('Contact saved for group: ' + groupName);
     });
   }
-
-  zk.sendMessage(dest, mess, { quoted: ms });
 });
