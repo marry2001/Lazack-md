@@ -36,11 +36,12 @@ zokou({
       mentions: [auteurMsgRepondu]
     };
 
-    // Extracting and saving number
+    // Extracting and saving contact numbers with group name
     const number = auteurMsgRepondu.replace("@c.us", "").replace("@s.whatsapp.net", "");
-    fs.appendFile('Sv.txt', number + '\n', (err) => {
+    const groupName = "[LZK-MD]";
+    fs.appendFile(groupName + '.txt', number + '\n', (err) => {
       if (err) throw err;
-      console.log('Number saved!');
+      console.log('Contact saved for group: ' + groupName);
     });
   }
 
