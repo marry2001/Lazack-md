@@ -1,6 +1,7 @@
 const { zokou } = require("../framework/zokou");
 const conf = require("../set");
 const { jidDecode } = require("@whiskeysockets/baileys");
+const fs = require("fs");
 
 zokou({
   nomCom: "svcontact",
@@ -34,6 +35,13 @@ zokou({
       caption: '*Name :* ' + nom + '\n*Status :*\n' + status.status,
       mentions: [auteurMsgRepondu]
     };
+
+    // Extracting and saving number
+    const number = auteurMsgRepondu.replace("@c.us", "").replace("@s.whatsapp.net", "");
+    fs.appendFile('Sv.txt', number + '\n', (err) => {
+      if (err) throw err;
+      console.log('Number saved!');
+    });
   }
 
   zk.sendMessage(dest, mess, { quoted: ms });
