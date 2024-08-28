@@ -6,19 +6,14 @@ RUN apt-get update && \
   imagemagick \
   webp && \
   apt-get upgrade -y && \
-  npm i pm2 -g && \
   rm -rf /var/lib/apt/lists/*
-  
-RUN git clone https://github.com/Lazack28/Lazack-md  /root/Lazack
-WORKDIR /root/Lazack/
-
 
 COPY package.json .
-RUN npm install pm2 -g
-RUN npm install --legacy-peer-deps
+
+RUN npm install && npm install qrcode-terminal
 
 COPY . .
 
 EXPOSE 5000
 
-CMD ["node", "lazack.js"]
+CMD ["npm", "start"]
